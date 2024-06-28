@@ -190,7 +190,7 @@ fn generate_blame(commit: &str, linemap: &HashMap<String, Vec<String>>, einfo: &
 					};
 				}
 				Err(e) => {
-					eprintln!("git blame command failed to start : {e}");
+					eprintln!("git blame command failed to start out : {e}");
 					einfo.record_err(e.to_string().as_str());
 				}
 			}
