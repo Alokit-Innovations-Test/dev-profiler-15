@@ -1,2 +1,2 @@
 # dev-profiler
-howcase the most meaningful insights from your code contributio
+howcase the most meaningful insights from your code contributi
