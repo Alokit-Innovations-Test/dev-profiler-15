@@ -80,7 +80,7 @@ fn generate_diff(prev_commit: &str, curr_commit: &str, smallfiles: &Vec<StatItem
 				};
 			}
 			Err(commanderr) => {
-				eprintln!("git diff command failedd to start : {commanderr}");
+				eprintln!("git diff command failed to start : {commanderr}");
 				einfo.record_err(commanderr.to_string().as_str());
 			}
 		};
