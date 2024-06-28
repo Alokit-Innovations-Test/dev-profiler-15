@@ -152,7 +152,7 @@ fn generate_blame(commit: &str, linemap: &HashMap<String, Vec<String>>, einfo: &
 							if blamelines.len() == 0 {
 								continue;
 							}
-							let linenumint = linenum.parse::<usize>().expect("Unable to parse linenum");
+							let linenumint = linenum.parse::<usize>().expect("Unable to pare linenum");
 							let lineauthormap = process_blamelines(&blamelines, linenumint);
 							let mut linebreak = linenumint;
 							for lidx in linenumint..(linenumint + blamelines.len()-1) {
