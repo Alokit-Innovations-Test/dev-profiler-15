@@ -218,7 +218,6 @@ fn get_tasks(provider: &str, repo_slug: &str, einfo: &mut RuntimeInfo) -> Option
 	let api_url = "https://gcscruncsql-k7jns52mtq-el.a.run.app/relevance/hunk";
 	let client = reqwest::blocking::Client::new();
 	let mut map = HashMap::new();
-	let (repo_name, repo_owner) = process_reposlug(repo_slug);
 	map.insert("repo_provider", provider);
 	map.insert("repo_owner", repo_owner.as_str());
 	map.insert("repo_name", repo_name.as_str());
