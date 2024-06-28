@@ -321,6 +321,7 @@ fn get_excluded_files(prev_commit: &str, next_commit: &str, einfo: &mut RuntimeI
 
 fn process_diff(diffmap: &HashMap<String, String>) -> Result<HashMap<String, Vec<String>>,Box<dyn Error>> {
 	let mut linemap: HashMap<String, Vec<String>> = HashMap::new();
+	let reviews = get_tasks(provider, repo_slug, einfo);
 	for (filepath, diff) in diffmap {
 		let mut limiterpos = Vec::new();
 		let delimitter = "@@";
@@ -370,7 +371,6 @@ fn process_diff(diffmap: &HashMap<String, String>) -> Result<HashMap<String, Vec
 }
 
 pub(crate) fn unfinished_tasks(provider: &str, repo_slug: &str, einfo: &mut RuntimeInfo) {
-	let reviews = get_tasks(provider, repo_slug, einfo);
 	if reviews.is_some() {
 		let mut prvec = Vec::<PrHunkItem>::new();
 		for review in reviews.expect("Validated reviews").reviews {
@@ -378,11 +378,8 @@ pub(crate) fn unfinished_tasks(provider: &str, repo_slug: &str, einfo: &mut Runt
 			let fileopt = get_excluded_files(&review.base_head_commit, &review.pr_head_commit, einfo);
 			if fileopt.is_some() {
 				let (bigfiles, smallfiles) = fileopt.expect("Validated fileopt");
-				let diffmap = generate_diff(&review.base_head_commit, &review.pr_head_commit, &smallfiles, einfo);
-				let diffres = process_diff(&diffmap);
 				match diffres {
 					Ok(linemap) => {
-						let blamevec = generate_blame(&review.base_head_commit, &linemap, einfo);
 						let hmapitem = PrHunkItem {
 							pr_number: review.id,
 							blamevec: blamevec,
