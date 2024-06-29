@@ -175,7 +175,7 @@ fn generate_blame(commit: &str, linemap: &HashMap<String, Vec<String>>, einfo: &
 							}
 							let lastidx = linenumint + blamelines.len()-1;
 							if lineauthormap.contains_key(&lastidx) {
-								let lineitem = lineauthormap.get(&lastidx).expect("lastidx checked");
+								let lineitem = lineauthormap.get(&lastidx).expect("lastidx checkeds");
 								blamevec.push(BlameItem {
 									author: lineitem.author.to_string(),
 									timestamp: lineitem.timestamp.to_string(),
