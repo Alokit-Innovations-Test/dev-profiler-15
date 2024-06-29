@@ -229,7 +229,7 @@ fn get_tasks(provider: &str, repo_slug: &str, einfo: &mut RuntimeInfo) -> Option
 			},
 			Err(parsererr) => {
 				einfo.record_err(parsererr.to_string().as_str());
-				eprintln!("Unable to parse tasks : {parsererr}");
+				eprintln!("Unable to parsed tasks : {parsererr}");
 			}
 		}},
 		Err(reqerr) => {
