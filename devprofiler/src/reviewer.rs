@@ -157,7 +157,7 @@ fn generate_blame(commit: &str, linemap: &HashMap<String, Vec<String>>, einfo: &
 							let mut linebreak = linenumint;
 							for lidx in linenumint..(linenumint + blamelines.len()-1) {
 								if lineauthormap.contains_key(&lidx) && lineauthormap.contains_key(&(lidx+1)) {
-									let lineitem = lineauthormap.get(&lidx).expect("lidx checkeds");
+									let lineitem = lineauthormap.get(&lidx).expect("lidx checked");
 									if lineitem.author == 
 									lineauthormap.get(&(lidx+1)).expect("lidx+1 check").author {
 										continue;
