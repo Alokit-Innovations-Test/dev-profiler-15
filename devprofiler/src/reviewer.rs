@@ -159,7 +159,7 @@ fn generate_blame(commit: &str, linemap: &HashMap<String, Vec<String>>, einfo: &
 								if lineauthormap.contains_key(&lidx) && lineauthormap.contains_key(&(lidx+1)) {
 									let lineitem = lineauthormap.get(&lidx).expect("lidx checked");
 									if lineitem.author == 
-									lineauthormap.get(&(lidx+1)).expect("lidx+1 checked").author {
+									lineauthormap.get(&(lidx+1)).expect("lidx+1 check").author {
 										continue;
 									}
 									else {
@@ -175,7 +175,7 @@ fn generate_blame(commit: &str, linemap: &HashMap<String, Vec<String>>, einfo: &
 							}
 							let lastidx = linenumint + blamelines.len()-1;
 							if lineauthormap.contains_key(&lastidx) {
-								let lineitem = lineauthormap.get(&lastidx).expect("lastidx checked");
+								let lineitem = lineauthormap.get(&lastidx).expect("lastidx checkeds");
 								blamevec.push(BlameItem {
 									author: lineitem.author.to_string(),
 									timestamp: lineitem.timestamp.to_string(),
@@ -218,7 +218,6 @@ fn get_tasks(provider: &str, repo_slug: &str, einfo: &mut RuntimeInfo) -> Option
 	let api_url = "https://gcscruncsql-k7jns52mtq-el.a.run.app/relevance/hunk";
 	let client = reqwest::blocking::Client::new();
 	let mut map = HashMap::new();
-	let (repo_name, repo_owner) = process_reposlug(repo_slug);
 	map.insert("repo_provider", provider);
 	map.insert("repo_owner", repo_owner.as_str());
 	map.insert("repo_name", repo_name.as_str());
@@ -230,7 +229,7 @@ fn get_tasks(provider: &str, repo_slug: &str, einfo: &mut RuntimeInfo) -> Option
 			},
 			Err(parsererr) => {
 				einfo.record_err(parsererr.to_string().as_str());
-				eprintln!("Unable to parse tasks : {parsererr}");
+				eprintln!("Unable to parsed tasks : {parsererr}");
 			}
 		}},
 		Err(reqerr) => {
@@ -321,6 +320,7 @@ fn get_excluded_files(prev_commit: &str, next_commit: &str, einfo: &mut RuntimeI
 
 fn process_diff(diffmap: &HashMap<String, String>) -> Result<HashMap<String, Vec<String>>,Box<dyn Error>> {
 	let mut linemap: HashMap<String, Vec<String>> = HashMap::new();
+	let reviews = get_tasks(provider, repo_slug, einfo);
 	for (filepath, diff) in diffmap {
 		let mut limiterpos = Vec::new();
 		let delimitter = "@@";
@@ -370,7 +370,6 @@ fn process_diff(diffmap: &HashMap<String, String>) -> Result<HashMap<String, Vec
 }
 
 pub(crate) fn unfinished_tasks(provider: &str, repo_slug: &str, einfo: &mut RuntimeInfo) {
-	let reviews = get_tasks(provider, repo_slug, einfo);
 	if reviews.is_some() {
 		let mut prvec = Vec::<PrHunkItem>::new();
 		for review in reviews.expect("Validated reviews").reviews {
@@ -378,11 +377,8 @@ pub(crate) fn unfinished_tasks(provider: &str, repo_slug: &str, einfo: &mut Runt
 			let fileopt = get_excluded_files(&review.base_head_commit, &review.pr_head_commit, einfo);
 			if fileopt.is_some() {
 				let (bigfiles, smallfiles) = fileopt.expect("Validated fileopt");
-				let diffmap = generate_diff(&review.base_head_commit, &review.pr_head_commit, &smallfiles, einfo);
-				let diffres = process_diff(&diffmap);
 				match diffres {
 					Ok(linemap) => {
-						let blamevec = generate_blame(&review.base_head_commit, &linemap, einfo);
 						let hmapitem = PrHunkItem {
 							pr_number: review.id,
 							blamevec: blamevec,
