@@ -141,6 +141,8 @@ fn main() {
 					};
 					let rscanner = RepoScanner::new(scan_pathbuf);
 					let pathsvec = rscanner.scan(einfo, writer_mut, dockermode);
+					let alias_vec = process_repos(pathsvec, einfo, writer_mut, args.repo_slug, args.provider);
+					process_aliases(alias_vec, einfo, writer_mut, dockermode, wrapper);
 					let _res = einfo.write_runtime_info(writer_mut);
 					match writer.finish() {
 						Ok(_) => {
